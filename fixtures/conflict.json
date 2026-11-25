@@ -1,0 +1,7 @@
+{
+  "schedules": [
+    "The active alpha schedule repeats every six ticks and fires at phase two of each cycle.",
+    "The beta schedule repeats every eight ticks. Its phase-four proposal was rejected. The operative schedule fires at phase three."
+  ],
+  "blackouts": [[44, 45], [19, 21], [20, 23]]
+}
