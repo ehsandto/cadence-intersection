@@ -11,3 +11,5 @@ CadenceIntersection finds shared ticks across periodic schedules written in pros
 The fixtures describe fictional schedules. Phases two and four on periods six and eight align at phase 20 every 24 ticks. After blackouts remove ticks 20 and 44, the window `[0,100)` contains ticks 68 and 92. Replacing the operative phase four with phase three produces an even/odd conflict and zero shared ticks.
 
 Install `requirements-dev.txt`, run `python -m pytest tests -q`, and run `genvm-lint check contracts/CadenceIntersection.py`.
+
+[Submission](SUBMISSION.md) · [StudioNet proofs](LIVE_PROOFS.md)

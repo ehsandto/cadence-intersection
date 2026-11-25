@@ -1,0 +1,253 @@
+{
+  "network": "StudioNet",
+  "source_commit": "9ed573e3810a3bcb0b5fa3f60c99b95ef3e46290",
+  "transactions": [
+    {
+      "step": "deploy",
+      "signer": "0x1ed2401570202c12588199eF5Ad55C1Edb8D7809",
+      "nonce": "0x0",
+      "functionName": "deploy",
+      "args": [],
+      "fee_wei": "78852000002588",
+      "hash": "0x22efd2e5cfeb158fd1c8025351e560b91df65b4ef6d7f036e013199e75ac2c62",
+      "receipt": {
+        "hash": "0x22efd2e5cfeb158fd1c8025351e560b91df65b4ef6d7f036e013199e75ac2c62",
+        "address": "0x88ea342BEb8E05F5C186582e0B3636222B5D6D52",
+        "status": "FINALIZED",
+        "execution": "SUCCESS",
+        "consensus": "MAJORITY_AGREE",
+        "leader_only": false,
+        "initial_validators": 5,
+        "agree_votes": 4,
+        "validator_execution_seen": true
+      }
+    },
+    {
+      "step": "aligned",
+      "signer": "0x1ed2401570202c12588199eF5Ad55C1Edb8D7809",
+      "nonce": "0x1",
+      "functionName": "index_schedule",
+      "args": [
+        "ehsandto/cadence-intersection/9ed573e3810a3bcb0b5fa3f60c99b95ef3e46290/fixtures/aligned.json",
+        "92631fd38af7d33cc9501bf631e3363bbcfae43c0e54c51dd2e01551f4ee97d5"
+      ],
+      "fee_wei": "78852000002588",
+      "hash": "0xe131eeaa3a388e4670b0ec1f7c8357df72ed081d07be38223a692911a72e5809",
+      "receipt": {
+        "hash": "0xe131eeaa3a388e4670b0ec1f7c8357df72ed081d07be38223a692911a72e5809",
+        "address": "0x88ea342BEb8E05F5C186582e0B3636222B5D6D52",
+        "status": "FINALIZED",
+        "execution": "SUCCESS",
+        "consensus": "MAJORITY_AGREE",
+        "leader_only": false,
+        "initial_validators": 5,
+        "agree_votes": 3,
+        "validator_execution_seen": true
+      }
+    },
+    {
+      "step": "conflict",
+      "signer": "0x1ed2401570202c12588199eF5Ad55C1Edb8D7809",
+      "nonce": "0x2",
+      "functionName": "index_schedule",
+      "args": [
+        "ehsandto/cadence-intersection/9ed573e3810a3bcb0b5fa3f60c99b95ef3e46290/fixtures/conflict.json",
+        "c8f9e64f491ff21f5b17f00be053701ed2cc0f6cb8386149fe24fea2731f2df1"
+      ],
+      "fee_wei": "78852000002588",
+      "hash": "0x6bd8c41cfa2b738a7628fb33ed9c43026d3c399605f1e2d7c659e063dfbdbda8",
+      "receipt": {
+        "hash": "0x6bd8c41cfa2b738a7628fb33ed9c43026d3c399605f1e2d7c659e063dfbdbda8",
+        "address": "0x88ea342BEb8E05F5C186582e0B3636222B5D6D52",
+        "status": "FINALIZED",
+        "execution": "ERROR",
+        "consensus": "MAJORITY_DISAGREE",
+        "leader_only": false,
+        "initial_validators": 5,
+        "agree_votes": 0,
+        "validator_execution_seen": true
+      }
+    },
+    {
+      "step": "conflict-retry",
+      "signer": "0x1A289347dBd5C0219a5a383eDD3Dfd52F0AC1e10",
+      "nonce": "0x0",
+      "functionName": "index_schedule",
+      "args": [
+        "ehsandto/cadence-intersection/9ed573e3810a3bcb0b5fa3f60c99b95ef3e46290/fixtures/conflict.json",
+        "c8f9e64f491ff21f5b17f00be053701ed2cc0f6cb8386149fe24fea2731f2df1"
+      ],
+      "fee_wei": "78852000002588",
+      "hash": "0x69bcbbe1f42c79a69428b42d73f99ff42340979d176ee6f959569f96f12c4ad9",
+      "receipt": {
+        "hash": "0x69bcbbe1f42c79a69428b42d73f99ff42340979d176ee6f959569f96f12c4ad9",
+        "address": "0x88ea342BEb8E05F5C186582e0B3636222B5D6D52",
+        "status": "FINALIZED",
+        "execution": "SUCCESS",
+        "consensus": "MAJORITY_AGREE",
+        "leader_only": false,
+        "initial_validators": 5,
+        "agree_votes": 3,
+        "validator_execution_seen": true
+      }
+    }
+  ],
+  "indices": {
+    "aligned": {
+      "record": {
+        "cycles": [
+          [
+            6,
+            2
+          ],
+          [
+            8,
+            4
+          ]
+        ],
+        "document": {
+          "blackouts": [
+            [
+              44,
+              45
+            ],
+            [
+              19,
+              21
+            ],
+            [
+              20,
+              23
+            ]
+          ],
+          "schedules": [
+            "The active alpha schedule repeats every six ticks and fires at phase two of each cycle.",
+            "The beta schedule repeats every eight ticks. Its phase-three proposal was rejected. The operative schedule fires at phase four."
+          ]
+        },
+        "merged_blackouts": [
+          [
+            19,
+            23
+          ],
+          [
+            44,
+            45
+          ]
+        ],
+        "progression": {
+          "period": 24,
+          "phase": 20,
+          "status": "READY"
+        },
+        "sha256": "92631fd38af7d33cc9501bf631e3363bbcfae43c0e54c51dd2e01551f4ee97d5",
+        "text": "{\n  \"schedules\": [\n    \"The active alpha schedule repeats every six ticks and fires at phase two of each cycle.\",\n    \"The beta schedule repeats every eight ticks. Its phase-three proposal was rejected. The operative schedule fires at phase four.\"\n  ],\n  \"blackouts\": [[44, 45], [19, 21], [20, 23]]\n}\n",
+        "url": "https://raw.githubusercontent.com/ehsandto/cadence-intersection/9ed573e3810a3bcb0b5fa3f60c99b95ef3e46290/fixtures/aligned.json"
+      },
+      "main": {
+        "count": 2,
+        "first": 68,
+        "last": 92,
+        "skipped": 2,
+        "status": "READY"
+      },
+      "boundary": {
+        "count": 1,
+        "first": 68,
+        "last": 68,
+        "skipped": 0,
+        "status": "READY"
+      }
+    },
+    "conflict": {
+      "record": {
+        "cycles": [
+          [
+            6,
+            2
+          ],
+          [
+            8,
+            3
+          ]
+        ],
+        "document": {
+          "blackouts": [
+            [
+              44,
+              45
+            ],
+            [
+              19,
+              21
+            ],
+            [
+              20,
+              23
+            ]
+          ],
+          "schedules": [
+            "The active alpha schedule repeats every six ticks and fires at phase two of each cycle.",
+            "The beta schedule repeats every eight ticks. Its phase-four proposal was rejected. The operative schedule fires at phase three."
+          ]
+        },
+        "merged_blackouts": [
+          [
+            19,
+            23
+          ],
+          [
+            44,
+            45
+          ]
+        ],
+        "progression": {
+          "status": "CONFLICT",
+          "witness": {
+            "gcd": 2,
+            "indices": [
+              0,
+              1
+            ],
+            "residues": [
+              0,
+              1
+            ]
+          }
+        },
+        "sha256": "c8f9e64f491ff21f5b17f00be053701ed2cc0f6cb8386149fe24fea2731f2df1",
+        "text": "{\n  \"schedules\": [\n    \"The active alpha schedule repeats every six ticks and fires at phase two of each cycle.\",\n    \"The beta schedule repeats every eight ticks. Its phase-four proposal was rejected. The operative schedule fires at phase three.\"\n  ],\n  \"blackouts\": [[44, 45], [19, 21], [20, 23]]\n}\n",
+        "url": "https://raw.githubusercontent.com/ehsandto/cadence-intersection/9ed573e3810a3bcb0b5fa3f60c99b95ef3e46290/fixtures/conflict.json"
+      },
+      "main": {
+        "count": 0,
+        "first": null,
+        "last": null,
+        "skipped": 0,
+        "status": "CONFLICT"
+      }
+    }
+  },
+  "test_faucets": [
+    {
+      "address": "0x1ed2401570202c12588199eF5Ad55C1Edb8D7809",
+      "requested_wei": "10000000000000000"
+    },
+    {
+      "address": "0x1A289347dBd5C0219a5a383eDD3Dfd52F0AC1e10",
+      "requested_wei": "10000000000000000"
+    }
+  ],
+  "address": "0x88ea342BEb8E05F5C186582e0B3636222B5D6D52",
+  "source": {
+    "address": "0x88ea342BEb8E05F5C186582e0B3636222B5D6D52",
+    "source_match": true,
+    "sha256": "0cb604dd23c0a65dc7176616cdcda2f0a08ff98a529d03deb2a8655d2b809605"
+  },
+  "recovery": {
+    "rejected_step": "conflict",
+    "retry_step": "conflict-retry",
+    "index_absence_verified": true
+  },
+  "verified": true
+}

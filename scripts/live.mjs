@@ -8,6 +8,7 @@ const journal = 'PROOFS.json';
 const code = 'contracts/CadenceIntersection.py';
 const verifyOnly = process.argv.includes('--verify-only');
 const resume = process.argv.includes('--resume');
+const retryConflict = process.argv.includes('--retry-conflict');
 const proof = fs.existsSync(journal)
   ? JSON.parse(fs.readFileSync(journal, 'utf8'))
   : {network: 'StudioNet', source_commit: process.env.SOURCE_COMMIT ?? process.env.GITHUB_SHA ?? null,
@@ -48,7 +49,7 @@ globalThis.fetch = async (input, options) => {
   return new Response(response.body, {status: response.status, headers: {'content-type': 'application/json'}});
 };
 
-async function transaction(step, account, functionName, args) {
+async function transaction(step, account, functionName, args, failed = false) {
   let entry = proof.transactions.find(tx => tx.step === step);
   if (!entry) {
     assert(!verifyOnly && account, 'Missing broadcast journal');
@@ -79,10 +80,18 @@ async function transaction(step, account, functionName, args) {
   entry.receipt = summary;
   save();
   assert.equal(summary.status, 'FINALIZED');
-  assert.equal(summary.execution, 'SUCCESS');
-  assert.equal(summary.consensus, 'MAJORITY_AGREE');
+  assert.equal(summary.execution, failed ? 'ERROR' : 'SUCCESS');
+  assert.equal(summary.consensus, failed ? 'MAJORITY_DISAGREE' : 'MAJORITY_AGREE');
   assert.equal(summary.leader_only, false);
-  assert(summary.initial_validators >= 3 && summary.agree_votes >= 2 && summary.validator_execution_seen);
+  assert(summary.initial_validators >= 3 && summary.validator_execution_seen);
+  if (failed) {
+    const votes = Object.values(tx.consensus_data.votes);
+    assert(votes.filter(vote => vote === 'disagree').length >= 2);
+    assert.match(Buffer.from(leader.result, 'base64').toString('utf8'),
+      /Manifest acquisition or interpretation failed/);
+  } else {
+    assert(summary.agree_votes >= 2);
+  }
   assert.equal(tx.from_address.toLowerCase(), entry.signer.toLowerCase());
   assert.equal(BigInt(tx.nonce), BigInt(entry.nonce));
   assert.equal(BigInt(tx.value), 0n);
@@ -90,6 +99,7 @@ async function transaction(step, account, functionName, args) {
   assert.equal(envelope.status, '0x1');
   assert.equal(envelope.from.toLowerCase(), entry.signer.toLowerCase());
   console.log(step, entry.receipt.status, entry.receipt.execution);
+  if (failed) return;
   if (functionName === 'deploy') return {address: entry.receipt.address};
   const bytes = Buffer.from(leader.result, 'base64');
   assert.equal(bytes[0], 0);
@@ -132,7 +142,11 @@ const cases = [
     main: {status: 'CONFLICT', count: 0, first: null, last: null, skipped: 0}},
 ];
 const completedSteps = new Set(proof.transactions.map(entry => entry.step));
-const account = verifyOnly || ['deploy', ...cases.map(test => test.name)]
+const failedConflict = proof.transactions.find(entry => entry.step === 'conflict')?.receipt?.execution === 'ERROR';
+assert(!failedConflict || retryConflict || completedSteps.has('conflict-retry'),
+  'Use --resume --retry-conflict after reviewing the rejected conflict receipt');
+const conflictStep = failedConflict ? 'conflict-retry' : 'conflict';
+const account = verifyOnly || ['deploy', 'aligned', conflictStep]
   .every(step => completedSteps.has(step)) ? null : await fund();
 
 const deployment = await transaction('deploy', account, 'deploy', []);
@@ -144,7 +158,17 @@ for (const test of cases) {
   const body = fs.readFileSync('fixtures/' + test.name + '.json');
   const coordinate = 'ehsandto/cadence-intersection/' + proof.source_commit + '/fixtures/' + test.name + '.json';
   const commitment = sha(body);
-  const {result: key} = await transaction(test.name, account, 'index_schedule', [coordinate, commitment]);
+  const args = [coordinate, commitment];
+  if (test.name === 'conflict' && failedConflict) {
+    await transaction('conflict', null, 'index_schedule', args, true);
+    if (!completedSteps.has(conflictStep)) {
+      await assert.rejects(read(proof.address, 'get_schedule', [commitment]), {code: -32000});
+      proof.recovery = {rejected_step: 'conflict', retry_step: conflictStep, index_absence_verified: true};
+      save();
+    }
+  }
+  const step = test.name === 'conflict' ? conflictStep : test.name;
+  const {result: key} = await transaction(step, account, 'index_schedule', args);
   assert.equal(key, commitment);
   const record = await read(proof.address, 'get_schedule', [key]);
   proof.indices[test.name] = {record};
